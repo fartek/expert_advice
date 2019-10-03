@@ -22,6 +22,16 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+config :expert_advice, ecto_repos: [ExpertAdviceStorage.Repo]
+
+config :expert_advice, ExpertAdviceStorage.Repo,
+  database: System.get_env("POSTGRES_DB"),
+  username: System.get_env("POSTGRES_USERNAME"),
+  password: System.get_env("POSTGRES_PASSWORD"),
+  hostname: System.get_env("POSTGRES_HOSTNAME"),
+  port: System.get_env("POSTGRES_PORT"),
+  pool_size: 10
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
