@@ -59,7 +59,7 @@ config :phoenix, :stacktrace_depth, 20
 config :phoenix, :plug_init_mode, :runtime
 
 config :expert_advice, ExpertAdviceStorage.Repo,
-  database: "expert_advice_test",
+  database: "expert_advice_dev",
   username: "root",
   password: "root",
   hostname: "localhost",
