@@ -22,9 +22,9 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-config :expert_advice_storage, ecto_repos: [ExpertAdviceStorage.Repo]
+config :expert_advice, ecto_repos: [ExpertAdviceStorage.Repo]
 
-config :expert_advice_storage, ExpertAdviceStorage.Repo,
+config :expert_advice, ExpertAdviceStorage.Repo,
   database: System.get_env("POSTGRES_DB"),
   username: System.get_env("POSTGRES_USERNAME"),
   password: System.get_env("POSTGRES_PASSWORD"),

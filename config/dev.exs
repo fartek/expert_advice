@@ -58,7 +58,7 @@ config :phoenix, :stacktrace_depth, 20
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
 
-config :expert_advice_storage, ExpertAdviceStorage.Repo,
+config :expert_advice, ExpertAdviceStorage.Repo,
   database: "expert_advice_test",
   username: "root",
   password: "root",
