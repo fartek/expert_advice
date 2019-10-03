@@ -8,3 +8,11 @@ config :expert_advice, ExpertAdviceWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+config :expert_advice_storage, ExpertAdviceStorage.Repo,
+  database: "expert_advice_test",
+  username: "root",
+  password: "root",
+  hostname: "localhost",
+  port: "5432",
+  pool: Ecto.Adapters.SQL.Sandbox
