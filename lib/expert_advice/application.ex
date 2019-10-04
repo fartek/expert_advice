@@ -9,7 +9,8 @@ defmodule ExpertAdvice.Application do
     # List all child processes to be supervised
     children = [
       # Start the endpoint when the application starts
-      ExpertAdviceWeb.Endpoint
+      ExpertAdviceWeb.Endpoint,
+      ExpertAdviceStorage.Repo
       # Starts a worker by calling: ExpertAdvice.Worker.start_link(arg)
       # {ExpertAdvice.Worker, arg},
     ]
