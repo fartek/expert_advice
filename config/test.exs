@@ -16,3 +16,5 @@ config :expert_advice, ExpertAdviceStorage.Repo,
   hostname: "localhost",
   port: "5432",
   pool: Ecto.Adapters.SQL.Sandbox
+
+config :pbkdf2_elixir, :rounds, 1
