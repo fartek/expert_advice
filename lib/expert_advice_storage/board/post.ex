@@ -25,7 +25,7 @@ defmodule ExpertAdviceStorage.Board.Post do
     field(:body, :string)
     field(:tags, {:array, :string})
 
-    has_many(:posts, Post)
+    has_many(:subposts, Post, foreign_key: :parent_id)
     belongs_to(:post, Post, type: Ecto.UUID, foreign_key: :parent_id)
 
     timestamps()
