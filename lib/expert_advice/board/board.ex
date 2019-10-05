@@ -3,7 +3,7 @@ defmodule ExpertAdvice.Board do
   The domain logic module for the board
   """
 
-  alias ExpertAdvice.Board.Question
+  alias ExpertAdvice.Board.{Answer, Question}
   alias ExpertAdviceStorage.Board, as: BoardStorage
   alias ExpertAdvice.Board.Parsers.Post, as: PostParser
 
@@ -32,6 +32,13 @@ defmodule ExpertAdvice.Board do
   def post_question(question) do
     question
     |> Question.to_post_params()
+    |> BoardStorage.create_post()
+  end
+
+  @spec post_answer(Answer.t()) :: {:ok, BoardStorage.Post.t()} | {:error, term}
+  def post_answer(question) do
+    question
+    |> Answer.to_post_params()
     |> BoardStorage.create_post()
   end
 end

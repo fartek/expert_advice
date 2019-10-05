@@ -84,4 +84,22 @@ defmodule ExpertAdvice.BoardTest do
       assert post.subposts == []
     end
   end
+
+  describe "post_answer/1" do
+    test "A valid Answer is inserted into the DB as a Post", context do
+      question = Factory.insert!(:post, author_id: context.user.id)
+
+      answer = %Answer{
+        content: "body",
+        author: Author.from_user(context.user),
+        question_id: question.id
+      }
+
+      assert {:ok, post} = answer |> Board.post_answer()
+
+      assert post.body == "body"
+      assert post.author_id == context.user.id
+      assert post.parent_id == question.id
+    end
+  end
 end
