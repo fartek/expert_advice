@@ -27,4 +27,11 @@ defmodule ExpertAdvice.Board do
   defp post_to_question_with_answers(post) do
     PostParser.parse_from_post(post, Question, load_answers: true)
   end
+
+  @spec post_question(Question.t()) :: {:ok, BoardStorage.Post.t()} | {:error, term}
+  def post_question(question) do
+    question
+    |> Question.to_post_params()
+    |> BoardStorage.create_post()
+  end
 end

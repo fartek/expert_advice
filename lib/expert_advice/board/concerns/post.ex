@@ -11,4 +11,5 @@ defmodule ExpertAdvice.Board.Concerns.Post do
   @type from_post_opt :: {:load_answers, boolean}
 
   @callback from_post(Post.t(), [from_post_opt]) :: post_domain_struct
+  @callback to_post_params(post_domain_struct) :: map
 end
