@@ -12,16 +12,22 @@ defmodule ExpertAdvice.Board.Answer do
 
   @type t :: %Answer{
           content: binary,
-          author: Author.t()
+          author: Author.t(),
+          question_id: Ecto.UUID.t()
         }
 
   defstruct content: "",
-            author: nil
+            author: nil,
+            question_id: nil
 
   @impl true
   @spec from_post(BoardStorage.Post.t(), [PostConcern.from_post_opt()]) :: Answer.t()
   def from_post(post, _opts \\ []) do
-    %Answer{content: post.body, author: Author.from_user(post.author)}
+    %Answer{
+      content: post.body,
+      author: Author.from_user(post.author),
+      question_id: post.parent_id
+    }
   end
 
   @impl true
