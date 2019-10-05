@@ -23,4 +23,10 @@ defmodule ExpertAdvice.Board.Answer do
   def from_post(post, _opts \\ []) do
     %Answer{content: post.body, author: Author.from_user(post.author)}
   end
+
+  @impl true
+  @spec to_post_params(Answer.t()) :: map
+  def to_post_params(_answer) do
+    %{error: "not_implemented"}
+  end
 end

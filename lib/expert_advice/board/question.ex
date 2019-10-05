@@ -49,4 +49,17 @@ defmodule ExpertAdvice.Board.Question do
       question
     end
   end
+
+  @impl true
+  @spec to_post_params(Question.t()) :: map
+  def to_post_params(question) do
+    %{
+      title: question.title,
+      body: question.content,
+      tags: question.tags,
+      parent_id: nil,
+      author_id: question.author.id,
+      number_if_views: 0
+    }
+  end
 end
