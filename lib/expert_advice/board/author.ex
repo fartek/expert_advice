@@ -7,15 +7,17 @@ defmodule ExpertAdvice.Board.Author do
   alias ExpertAdviceStorage.Identity, as: IdentityStorage
 
   @type t :: %Author{
-          display_name: binary
+          display_name: binary,
+          id: Ecto.UUID.t()
         }
 
-  defstruct [:display_name]
+  defstruct [:id, :display_name]
 
   @spec from_user(IdentityStorage.User.t()) :: Author.t()
   def from_user(user) do
     %Author{
-      display_name: user.display_name
+      display_name: user.display_name,
+      id: user.id
     }
   end
 end
