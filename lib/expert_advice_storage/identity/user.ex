@@ -7,6 +7,7 @@ defmodule ExpertAdviceStorage.Identity.User do
 
   alias __MODULE__
   alias Ecto.Changeset
+  alias ExpertAdviceStorage.Board.Post
   alias ExpertAdviceStorage.Identity.Account
 
   @allowed_fields ~w(display_name account_id)a
@@ -19,6 +20,7 @@ defmodule ExpertAdviceStorage.Identity.User do
     field(:display_name, :string)
 
     belongs_to(:account, Account, type: Ecto.UUID)
+    has_one(:post, Post)
 
     timestamps()
   end

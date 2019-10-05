@@ -7,9 +7,10 @@ defmodule ExpertAdviceStorage.Board.Post do
 
   alias __MODULE__
   alias Ecto.Changeset
+  alias ExpertAdviceStorage.Identity.User
 
-  @allowed_fields ~w(title body tags parent_id)a
-  @required_fields ~w(body tags)a
+  @allowed_fields ~w(title body tags parent_id author_id number_of_views)a
+  @required_fields ~w(body tags author_id)a
 
   @type t :: %Post{
           title: binary,
@@ -24,9 +25,11 @@ defmodule ExpertAdviceStorage.Board.Post do
     field(:slug, :string)
     field(:body, :string)
     field(:tags, {:array, :string})
+    field(:number_of_views, :integer)
 
     has_many(:subposts, Post, foreign_key: :parent_id)
     belongs_to(:post, Post, type: Ecto.UUID, foreign_key: :parent_id)
+    belongs_to(:author, User, type: Ecto.UUID, foreign_key: :author_id)
 
     timestamps()
   end

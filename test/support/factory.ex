@@ -24,7 +24,8 @@ defmodule ExpertAdviceStorage.Factory do
       title: "title",
       body: "body",
       slug: "slug",
-      tags: []
+      tags: [],
+      number_of_views: 0
     }
   end
 

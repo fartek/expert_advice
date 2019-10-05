@@ -20,12 +20,14 @@ defmodule ExpertAdviceStorage.Board do
     Post
     |> where([p], p.slug == ^slug)
     |> join(:left, [p], assoc(p, :subposts))
-    |> preload([_, sp], subposts: sp)
+    |> join(:inner, [p, _], assoc(p, :author))
+    |> join(:inner, [_, sp, _], assoc(sp, :author))
+    |> preload([_, sp, a, spa], author: a, subposts: {sp, author: spa})
     |> order_by([_, sp], asc: sp.inserted_at)
     |> Repo.one()
   end
 
-  @typep criterion :: {:tags, [binary]} | {:contains, binary} | {:limit, pos_integer}
+  @type criterion :: {:tags, [binary]} | {:contains, binary} | {:limit, pos_integer}
   @spec list_root_posts([criterion]) :: [Post.t()]
   def list_root_posts(criteria \\ []) do
     tags = criteria[:tags]
@@ -34,11 +36,13 @@ defmodule ExpertAdviceStorage.Board do
 
     Post
     |> where([p], is_nil(p.parent_id))
-    |> join(:left, [p], assoc(p, :subposts))
-    |> preload([_, sp], subposts: sp)
+    |> join(:inner, [p], assoc(p, :author))
+    |> join(:left, [p, a], assoc(p, :subposts))
     |> apply_tags(tags)
     |> apply_contains(contains)
     |> apply_limit(limit)
+    |> preload([p, a], author: a)
+    |> order_by([p], desc: p.inserted_at)
     |> Repo.all()
   end
 
@@ -69,7 +73,7 @@ defmodule ExpertAdviceStorage.Board do
     query_string = "%#{sanitized_contains}%"
 
     dynamic(
-      [p, sp],
+      [p, _a, sp],
       ilike(p.title, ^query_string) or
         ilike(p.body, ^query_string) or
         ilike(sp.title, ^query_string) or
