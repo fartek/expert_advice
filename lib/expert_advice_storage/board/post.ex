@@ -9,7 +9,7 @@ defmodule ExpertAdviceStorage.Board.Post do
   alias Ecto.Changeset
 
   @allowed_fields ~w(title body tags parent_id)a
-  @required_fields ~w(title body tags)a
+  @required_fields ~w(body tags)a
 
   @type t :: %Post{
           title: binary,

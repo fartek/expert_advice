@@ -45,11 +45,9 @@ defmodule ExpertAdviceStorage.Board.PostTest do
     end
 
     test "requires specific properties", context do
-      params_no_title = Map.delete(context.valid_params, :title)
       params_no_body = Map.delete(context.valid_params, :body)
       params_no_tags = Map.delete(context.valid_params, :tags)
 
-      refute Post.changeset(params_no_title).valid?
       refute Post.changeset(params_no_body).valid?
       refute Post.changeset(params_no_tags).valid?
     end
