@@ -3,6 +3,7 @@ defmodule ExpertAdviceStorage.Factory do
   This module is used to create stubs for testing and provides a quick way
   to insert entries into the DB.
   """
+
   alias ExpertAdviceStorage.Repo
   alias ExpertAdviceStorage.Board.Post
   alias ExpertAdviceStorage.Identity.{Account, User}
