@@ -51,7 +51,7 @@ defmodule ExpertAdviceStorage.Board do
   defp apply_tags(query, []), do: query
   defp apply_tags(query, tags), do: where(query, ^do_apply_tags(tags))
 
-  @spec do_apply_tags([binary]) :: Ecto.Query.DynamicExpr.t()
+  @spec do_apply_tags([binary]) :: map
   defp do_apply_tags(tags) do
     Enum.reduce(tags, dynamic(false), fn tag, dynamic ->
       itag = String.downcase(tag)
@@ -63,7 +63,7 @@ defmodule ExpertAdviceStorage.Board do
   defp apply_contains(query, nil), do: query
   defp apply_contains(query, contains), do: where(query, ^do_apply_contains(contains))
 
-  @spec do_apply_contains(binary) :: Ecto.Query.DynamicExpr.t()
+  @spec do_apply_contains(binary) :: map
   defp do_apply_contains(contains) do
     sanitized_contains = String.trim(contains) |> String.replace(~r/\%/, "")
     query_string = "%#{sanitized_contains}%"
