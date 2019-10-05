@@ -3,9 +3,13 @@ defmodule ExpertAdvice.Board.Question do
   The domain entity that represents a question in the board
   """
 
+  @behaviour ExpertAdvice.Board.Concerns.Post
+
   alias __MODULE__
   alias ExpertAdvice.Board.{Answer, Author}
   alias ExpertAdviceStorage.Board, as: BoardStorage
+  alias ExpertAdvice.Board.Parsers.Post, as: PostParser
+  alias ExpertAdvice.Board.Concerns.Post, as: PostConcern
 
   @type t :: %Question{
           title: binary,
@@ -25,9 +29,12 @@ defmodule ExpertAdvice.Board.Question do
             answers: :not_loaded,
             number_of_views: 0
 
-  @spec from_post(BoardStorage.Post.t()) :: Question.t()
-  def from_post(post) do
-    %Question{
+  @impl true
+  @spec from_post(BoardStorage.Post.t(), [PostConcern.from_post_opt()]) :: Question.t()
+  def from_post(post, opts \\ []) do
+    load_answers = opts[:load_answers] || false
+
+    question = %Question{
       title: post.title,
       slug: post.slug,
       content: post.body,
@@ -35,5 +42,11 @@ defmodule ExpertAdvice.Board.Question do
       author: Author.from_user(post.author),
       number_of_views: post.number_of_views
     }
+
+    if load_answers do
+      %Question{question | answers: PostParser.parse_from_posts(post.subposts, Answer)}
+    else
+      question
+    end
   end
 end

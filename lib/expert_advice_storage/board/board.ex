@@ -15,7 +15,7 @@ defmodule ExpertAdviceStorage.Board do
     |> Repo.insert()
   end
 
-  @spec get_post_with_subposts_by_slug(binary) :: {:ok, Post.t()} | {:error, term}
+  @spec get_post_with_subposts_by_slug(binary) :: Post.t() | nil
   def get_post_with_subposts_by_slug(slug) do
     Post
     |> where([p], p.slug == ^slug)
