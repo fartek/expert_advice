@@ -19,6 +19,7 @@ defmodule ExpertAdviceStorage.Board.Post do
           tags: [binary]
         }
 
+  @timestamps_opts [type: :naive_datetime_usec]
   @primary_key {:id, :binary_id, autogenerate: true}
   schema "posts" do
     field(:title, :string)

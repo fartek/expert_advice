@@ -15,6 +15,7 @@ defmodule ExpertAdviceStorage.Identity.User do
 
   @type t :: %User{display_name: binary}
 
+  @timestamps_opts [type: :naive_datetime_usec]
   @primary_key {:id, :binary_id, autogenerate: true}
   schema "users" do
     field(:display_name, :string)
