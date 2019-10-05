@@ -59,7 +59,7 @@ defmodule ExpertAdvice.Board.Question do
       tags: question.tags,
       parent_id: nil,
       author_id: question.author.id,
-      number_if_views: 0
+      number_of_views: 0
     }
   end
 end
