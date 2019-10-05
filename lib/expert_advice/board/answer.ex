@@ -32,7 +32,14 @@ defmodule ExpertAdvice.Board.Answer do
 
   @impl true
   @spec to_post_params(Answer.t()) :: map
-  def to_post_params(_answer) do
-    %{error: "not_implemented"}
+  def to_post_params(answer) do
+    %{
+      title: nil,
+      body: answer.content,
+      tags: [],
+      parent_id: answer.question_id,
+      author_id: answer.author.id,
+      number_of_views: 0
+    }
   end
 end
