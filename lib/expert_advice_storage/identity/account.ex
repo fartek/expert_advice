@@ -18,6 +18,7 @@ defmodule ExpertAdviceStorage.Identity.Account do
           hashed_password: binary
         }
 
+  @timestamps_opts [type: :naive_datetime_usec]
   @primary_key {:id, :binary_id, autogenerate: true}
   schema "accounts" do
     field(:username, :string)

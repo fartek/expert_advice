@@ -25,6 +25,7 @@ config :phoenix, :json_library, Jason
 config :expert_advice, ecto_repos: [ExpertAdviceStorage.Repo]
 
 config :expert_advice, ExpertAdviceStorage.Repo,
+  migration_timestamps: [type: :naive_datetime_usec],
   database: System.get_env("POSTGRES_DB"),
   username: System.get_env("POSTGRES_USERNAME"),
   password: System.get_env("POSTGRES_PASSWORD"),
