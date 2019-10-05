@@ -12,6 +12,7 @@ defmodule ExpertAdvice.Board.AnswerTest do
 
       assert question.content == post.body
       assert question.author.display_name == post.author.display_name
+      assert question.question_id == post.parent_id
     end
   end
 end
