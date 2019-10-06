@@ -21,7 +21,7 @@ defmodule ExpertAdviceStorage.Identity.User do
     field(:display_name, :string)
 
     belongs_to(:account, Account, type: Ecto.UUID)
-    has_one(:post, Post, foreign_key: :author_id)
+    has_many(:posts, Post, foreign_key: :author_id)
 
     timestamps()
   end
