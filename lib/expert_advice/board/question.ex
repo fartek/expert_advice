@@ -12,6 +12,7 @@ defmodule ExpertAdvice.Board.Question do
   alias ExpertAdvice.Board.Concerns.Post, as: PostConcern
 
   @type t :: %Question{
+          id: Ecto.UUID.t(),
           title: binary,
           slug: binary,
           content: binary,
@@ -21,7 +22,8 @@ defmodule ExpertAdvice.Board.Question do
           number_of_views: pos_integer
         }
 
-  defstruct title: nil,
+  defstruct id: nil,
+            title: nil,
             slug: nil,
             content: "",
             tags: [],
@@ -35,6 +37,7 @@ defmodule ExpertAdvice.Board.Question do
     load_answers = opts[:load_answers] || false
 
     question = %Question{
+      id: post.id,
       title: post.title,
       slug: post.slug,
       content: post.body,
