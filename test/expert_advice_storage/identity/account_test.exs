@@ -50,5 +50,16 @@ defmodule ExpertAdviceStorage.Identity.AccountTest do
       errors = Changeset.traverse_errors(changeset, & &1)
       assert %{username: [{"has already been taken", _}]} = errors
     end
+
+    test "assures the password is at least X characters long", context do
+      assert {:error, changeset} =
+               context.valid_params
+               |> Map.put(:password, "1234567")
+               |> Account.changeset()
+               |> Repo.insert()
+
+      errors = Changeset.traverse_errors(changeset, & &1)
+      assert %{password: [{"should be at least %{count} character(s)", _}]} = errors
+    end
   end
 end

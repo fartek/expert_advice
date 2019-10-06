@@ -36,6 +36,7 @@ defmodule ExpertAdviceStorage.Identity.Account do
     |> Changeset.cast(params, @allowed_fields)
     |> Changeset.validate_required(@required_fields)
     |> Changeset.unique_constraint(:username)
+    |> Changeset.validate_length(:password, min: 8)
     |> put_hashed_password()
     |> remove_password()
   end
