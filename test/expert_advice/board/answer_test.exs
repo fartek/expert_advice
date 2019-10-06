@@ -8,11 +8,12 @@ defmodule ExpertAdvice.Board.AnswerTest do
     test "creates a Answer from a Post" do
       user = Factory.build(:user)
       post = Factory.build(:post, author: user)
-      question = Answer.from_post(post)
+      answer = Answer.from_post(post)
 
-      assert question.content == post.body
-      assert question.author.display_name == post.author.display_name
-      assert question.question_id == post.parent_id
+      assert answer.content == post.body
+      assert answer.author.display_name == post.author.display_name
+      assert answer.question_id == post.parent_id
+      assert answer.id == post.id
     end
   end
 end

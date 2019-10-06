@@ -11,12 +11,14 @@ defmodule ExpertAdvice.Board.Answer do
   alias ExpertAdvice.Board.Concerns.Post, as: PostConcern
 
   @type t :: %Answer{
+          id: Ecto.UUID.t(),
           content: binary,
           author: Author.t(),
           question_id: Ecto.UUID.t()
         }
 
-  defstruct content: "",
+  defstruct id: nil,
+            content: "",
             author: nil,
             question_id: nil
 
@@ -24,6 +26,7 @@ defmodule ExpertAdvice.Board.Answer do
   @spec from_post(BoardStorage.Post.t(), [PostConcern.from_post_opt()]) :: Answer.t()
   def from_post(post, _opts \\ []) do
     %Answer{
+      id: post.id,
       content: post.body,
       author: Author.from_user(post.author),
       question_id: post.parent_id

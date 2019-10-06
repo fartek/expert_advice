@@ -16,6 +16,7 @@ defmodule ExpertAdvice.Board.QuestionTest do
       assert question.tags == post.tags
       assert question.author.display_name == post.author.display_name
       assert question.number_of_views == post.number_of_views
+      assert question.id == post.id
     end
   end
 end
