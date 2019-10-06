@@ -15,7 +15,8 @@ defmodule ExpertAdviceStorage.Board.PostTest do
         tags: ["valid_tag_1", "valid_tag_2"],
         parent_id: nil,
         author_id: user.id,
-        number_of_views: 5
+        number_of_views: 5,
+        is_deleted: true
       }
     }
   end
@@ -29,6 +30,7 @@ defmodule ExpertAdviceStorage.Board.PostTest do
       assert changeset.changes.tags == ["valid_tag_1", "valid_tag_2"]
       assert changeset.changes.author_id == context.valid_params.author_id
       assert changeset.changes.number_of_views == 5
+      assert changeset.changes.is_deleted == true
     end
 
     test "generates a slug", context do
