@@ -1,3 +1,3 @@
-defmodule ExpertAdviceWeb.PageView do
+defmodule ExpertAdviceWeb.AuthView do
   use ExpertAdviceWeb, :view
 end
