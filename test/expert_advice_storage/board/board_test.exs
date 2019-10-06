@@ -148,8 +148,8 @@ defmodule ExpertAdviceStorage.BoardTest do
       assert Board.list_root_posts(contains: "question 2", limit: 1) == [post_2]
     end
 
-    test "list even deleted posts", context do
-      post_1 =
+    test "list only not deleted posts", context do
+      post =
         Factory.insert!(:post,
           title: "question 1",
           slug: "question-1",
@@ -157,18 +157,16 @@ defmodule ExpertAdviceStorage.BoardTest do
           author_id: context.valid_params.author_id
         )
 
-      post_2 =
-        Factory.insert!(:post,
-          title: "question 2",
-          slug: "question-2",
-          body: "body 2",
-          author_id: context.valid_params.author_id,
-          is_deleted: true
-        )
+      Factory.insert!(:post,
+        title: "question 2",
+        slug: "question-2",
+        body: "body 2",
+        author_id: context.valid_params.author_id,
+        is_deleted: true
+      )
 
-      post_1 = Repo.preload(post_1, :author)
-      post_2 = Repo.preload(post_2, :author)
-      assert Board.list_root_posts() == [post_2, post_1]
+      post = Repo.preload(post, :author)
+      assert Board.list_root_posts() == [post]
     end
   end
 

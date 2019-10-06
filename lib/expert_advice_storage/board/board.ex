@@ -35,7 +35,7 @@ defmodule ExpertAdviceStorage.Board do
     limit = criteria[:limit]
 
     Post
-    |> where([p], is_nil(p.parent_id))
+    |> where([p], is_nil(p.parent_id) and not p.is_deleted)
     |> join(:inner, [p], assoc(p, :author))
     |> join(:left, [p, _], assoc(p, :subposts))
     |> apply_tags(tags)
