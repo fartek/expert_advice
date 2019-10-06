@@ -14,13 +14,15 @@ defmodule ExpertAdvice.Board.Answer do
           id: Ecto.UUID.t(),
           content: binary,
           author: Author.t(),
-          question_id: Ecto.UUID.t()
+          question_id: Ecto.UUID.t(),
+          is_deleted?: boolean
         }
 
   defstruct id: nil,
             content: "",
             author: nil,
-            question_id: nil
+            question_id: nil,
+            is_deleted?: false
 
   @impl true
   @spec from_post(BoardStorage.Post.t(), [PostConcern.from_post_opt()]) :: Answer.t()
@@ -29,7 +31,8 @@ defmodule ExpertAdvice.Board.Answer do
       id: post.id,
       content: post.body,
       author: Author.from_user(post.author),
-      question_id: post.parent_id
+      question_id: post.parent_id,
+      is_deleted?: post.is_deleted
     }
   end
 
@@ -42,7 +45,8 @@ defmodule ExpertAdvice.Board.Answer do
       tags: [],
       parent_id: answer.question_id,
       author_id: answer.author.id,
-      number_of_views: 0
+      number_of_views: 0,
+      is_deleted: answer.is_deleted?
     }
   end
 end
