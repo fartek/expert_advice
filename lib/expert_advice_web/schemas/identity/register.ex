@@ -17,6 +17,7 @@ defmodule ExpertAdviceWeb.Schemas.Identity.Register do
     field(:password_confirmation, :string)
   end
 
+  @spec changeset(map) :: Changeset.t()
   def changeset(params \\ %{}) do
     %Register{}
     |> Changeset.cast(params, @allowed_fields)
@@ -26,6 +27,7 @@ defmodule ExpertAdviceWeb.Schemas.Identity.Register do
     )
   end
 
+  @spec merge_with_changeset(Changeset.t(), Changeset.t()) :: Changeset.t()
   def merge_with_changeset(schema, changeset) do
     schema
     |> Map.put(:changes, Map.merge(schema.changes, changeset.changes))

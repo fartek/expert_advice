@@ -15,6 +15,7 @@ defmodule ExpertAdviceWeb.Schemas.Identity.Login do
     field(:password, :string)
   end
 
+  @spec changeset(map) :: Changeset.t()
   def changeset(params \\ %{}) do
     %Login{}
     |> Changeset.cast(params, @allowed_fields)
