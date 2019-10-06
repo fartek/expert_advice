@@ -16,7 +16,7 @@
             <span class="inline-block"><%= account.username %></span>
             <span class="inline-block">|</span>
             <a class="inline-block" href="<%= Routes.auth_path(@conn, :logout) %>">Logout</a>
-          <%= else %>
+          <% else %>
             <a class="inline-block" href="<%= Routes.auth_path(@conn, :show) %>">Login</a>
             <span class="inline-block">|</span>
             <a class="inline-block" href="<%= Routes.auth_path(@conn, :new) %>">Register</a>
@@ -30,7 +30,8 @@
     <main role="main" class="container">
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
-      <%= render @view_module, @view_template, assigns %>
+      <% assigns_with_account = Map.put(assigns, :account, account) %>
+      <%= render @view_module, @view_template, assigns_with_account %>
     </main>
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </body>

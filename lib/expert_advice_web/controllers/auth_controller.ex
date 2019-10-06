@@ -78,8 +78,10 @@ defmodule ExpertAdviceWeb.AuthController do
   end
 
   def logout(conn, _params) do
+    [referer | _] = get_req_header(conn, "referer")
+
     conn
     |> Guardian.Plug.sign_out()
-    |> redirect(to: "/")
+    |> redirect(external: referer)
   end
 end
