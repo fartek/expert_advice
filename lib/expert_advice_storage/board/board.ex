@@ -98,4 +98,22 @@ defmodule ExpertAdviceStorage.Board do
 
   @spec delete_post(Ecto.UUID.t()) :: {:ok, Post.t()} | {:error, term}
   def delete_post(id), do: patch_post(id, %{is_deleted: true})
+
+  @spec get_post_by_slug(binary) :: Post.t() | nil
+  def get_post_by_slug(slug) do
+    Post
+    |> where([p], p.slug == ^slug)
+    |> join(:inner, [p], assoc(p, :author))
+    |> preload([_, a], author: a)
+    |> Repo.one()
+  end
+
+  @spec get_post(binary) :: Post.t() | nil
+  def get_post(id) do
+    Post
+    |> where([p], p.id == ^id)
+    |> join(:inner, [p], assoc(p, :author))
+    |> preload([_, a], author: a)
+    |> Repo.one()
+  end
 end
