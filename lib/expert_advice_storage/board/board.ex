@@ -18,7 +18,7 @@ defmodule ExpertAdviceStorage.Board do
   @spec get_post_with_subposts_by_slug(binary) :: Post.t() | nil
   def get_post_with_subposts_by_slug(slug) do
     Post
-    |> where([p], p.slug == ^slug and not p.is_deleted)
+    |> where([p], p.slug == ^slug)
     |> join(:inner, [p], assoc(p, :author))
     |> join(:left, [p, _], assoc(p, :subposts))
     |> join(:left, [_, _, sp], assoc(sp, :author))
@@ -35,7 +35,7 @@ defmodule ExpertAdviceStorage.Board do
     limit = criteria[:limit]
 
     Post
-    |> where([p], is_nil(p.parent_id) and not p.is_deleted)
+    |> where([p], is_nil(p.parent_id))
     |> join(:inner, [p], assoc(p, :author))
     |> join(:left, [p, _], assoc(p, :subposts))
     |> apply_tags(tags)
