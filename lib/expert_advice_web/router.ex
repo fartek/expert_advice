@@ -16,7 +16,13 @@ defmodule ExpertAdviceWeb.Router do
   scope "/", ExpertAdviceWeb do
     pipe_through :browser
 
+    get "/login", AuthController, :show
+    post "/login", AuthController, :authenticate
+    get "/register", AuthController, :new
+    post "/register", AuthController, :create
+
     get "/", PageController, :index
+    get "/:slug", PageController, :show
   end
 
   # Other scopes may use custom stacks.
