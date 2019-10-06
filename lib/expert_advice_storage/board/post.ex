@@ -46,6 +46,15 @@ defmodule ExpertAdviceStorage.Board.Post do
     |> generate_slug()
   end
 
+  @spec patch_changeset(Post.t(), map) :: Changeset.t()
+  def patch_changeset(post, params) do
+    post
+    |> Changeset.cast(params, @allowed_fields)
+    |> Changeset.unique_constraint(:title)
+    |> Changeset.unique_constraint(:slug)
+    |> generate_slug()
+  end
+
   @spec generate_slug(Changeset.t()) :: Changeset.t()
   defp generate_slug(%Changeset{valid?: true, changes: %{title: title}} = changeset) do
     case Slug.slugify(title) do
