@@ -11,9 +11,16 @@
     <header>
       <section class="container">
         <nav role="navigation">
-          <a class="inline-block" href="<%= Routes.auth_path(@conn, :show) %>">Login</a>
-          <span class="inline-block">|</span>
-          <a class="inline-block" href="<%= Routes.auth_path(@conn, :new) %>">Register</a>
+          <% account = Guardian.Plug.current_resource(@conn) %>
+          <%= if account do %>
+            <span class="inline-block"><%= account.username %></span>
+            <span class="inline-block">|</span>
+            <a class="inline-block" href="<%= Routes.auth_path(@conn, :logout) %>">Logout</a>
+          <%= else %>
+            <a class="inline-block" href="<%= Routes.auth_path(@conn, :show) %>">Login</a>
+            <span class="inline-block">|</span>
+            <a class="inline-block" href="<%= Routes.auth_path(@conn, :new) %>">Register</a>
+          <% end %>
         </nav>
         <a href="/" class="main-title">
           Expert Advice

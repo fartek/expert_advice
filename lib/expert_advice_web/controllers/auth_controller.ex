@@ -2,6 +2,7 @@ defmodule ExpertAdviceWeb.AuthController do
   use ExpertAdviceWeb, :controller
 
   alias ExpertAdvice.Identity
+  alias ExpertAdviceWeb.Auth.Guardian
   alias ExpertAdviceWeb.Schemas.Identity.Register, as: RegisterSchema
   alias ExpertAdviceWeb.Schemas.Identity.Login, as: LoginSchema
 
@@ -59,21 +60,26 @@ defmodule ExpertAdviceWeb.AuthController do
     password = schema.changes.password
 
     case Identity.authenticate(username, password) do
-      {:ok, _account} ->
+      {:ok, account} ->
         conn
         |> put_flash(:info, @login_success)
-        |> redirect(to: Routes.page_path(conn, :index))
+        |> Guardian.Plug.sign_in(account)
+        |> redirect(to: "/")
 
       {:error, _} ->
         conn
         |> put_flash(:error, @login_fail)
         |> render("show.html", changeset: schema)
     end
-
-    conn
   end
 
   defp do_authenticate(changeset, conn) do
     render(conn, "show.html", changeset: Map.put(changeset, :action, :insert))
+  end
+
+  def logout(conn, _params) do
+    conn
+    |> Guardian.Plug.sign_out()
+    |> redirect(to: "/")
   end
 end
