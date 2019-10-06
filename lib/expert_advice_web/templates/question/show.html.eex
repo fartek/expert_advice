@@ -26,7 +26,7 @@
   <div>
     Posted by: <%= answer.author.display_name %>
     <%= if not answer.is_deleted? and @account != nil and answer.author.id == @account.user.id do %>
-      <a href="<%= Routes.answer_path(@conn, :delete_answer, @details.slug, answer.id) %>"> Delete</a>
+      <a href="<%= Routes.answer_path(@conn, :delete, @details.slug, answer.id) %>"> Delete</a>
     <% end %>
   </div>
 </article>
@@ -34,7 +34,7 @@
 
 <%= if @account != nil and not @details.is_deleted? do %>
   <h3>Post answer</h3>
-  <%= form_for @changeset, Routes.answer_path(@conn, :answer, @details.slug), fn f -> %>
+  <%= form_for @changeset, Routes.answer_path(@conn, :create, @details.slug), fn f -> %>
     <div>
       <%= label f, :content %>
       <%= textarea f, :content %>

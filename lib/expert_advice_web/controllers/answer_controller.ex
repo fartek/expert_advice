@@ -6,13 +6,13 @@ defmodule ExpertAdviceWeb.AnswerController do
 
   @answer_post_success "Answer posted successfully!"
 
-  def answer(conn, params) do
+  def create(conn, params) do
     params["post_answer"]
     |> PostAnswerSchema.changeset()
-    |> do_answer(conn, params["slug"])
+    |> do_create(conn, params["slug"])
   end
 
-  defp do_answer(%{valid?: true} = schema, conn, slug) do
+  defp do_create(%{valid?: true} = schema, conn, slug) do
     account = Guardian.Plug.current_resource(conn)
     question = Board.inspect_question_by_slug(slug)
 
@@ -34,7 +34,7 @@ defmodule ExpertAdviceWeb.AnswerController do
     end
   end
 
-  defp do_answer(changeset, conn, slug) do
+  defp do_create(changeset, conn, slug) do
     error_message = changeset |> PostAnswerSchema.extract_errors() |> parse_answer_error()
 
     conn
@@ -64,7 +64,7 @@ defmodule ExpertAdviceWeb.AnswerController do
 
   defp parse_answer_error(_), do: "Something went wrong!"
 
-  def delete_answer(conn, params) do
+  def delete(conn, params) do
     id = params["id"]
     slug = params["slug"]
 
@@ -76,11 +76,11 @@ defmodule ExpertAdviceWeb.AnswerController do
 
       answer ->
         author = Guardian.Plug.current_resource(conn).user
-        do_delete_answer(conn, answer, author, slug)
+        do_delete(conn, answer, author, slug)
     end
   end
 
-  defp do_delete_answer(conn, %{author: %{id: id}, is_deleted?: false} = answer, %{id: id}, slug) do
+  defp do_delete(conn, %{author: %{id: id}, is_deleted?: false} = answer, %{id: id}, slug) do
     case Board.delete_answer(answer) do
       :ok ->
         conn
@@ -94,7 +94,7 @@ defmodule ExpertAdviceWeb.AnswerController do
     end
   end
 
-  defp do_delete_answer(conn, _answer, _author, slug) do
+  defp do_delete(conn, _answer, _author, slug) do
     conn
     |> put_flash(:error, "You do not have the rights to delete this answer")
     |> redirect(to: Routes.question_path(conn, :show, slug))
