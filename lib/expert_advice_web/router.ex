@@ -13,16 +13,29 @@ defmodule ExpertAdviceWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :auth do
+    plug ExpertAdviceWeb.Auth.Pipeline
+  end
+
+  pipeline :ensure_auth do
+    plug Guardian.Plug.EnsureAuthenticated
+  end
+
   scope "/", ExpertAdviceWeb do
-    pipe_through :browser
+    pipe_through [:browser, :auth]
 
     get "/login", AuthController, :show
     post "/login", AuthController, :authenticate
+    get "/logout", AuthController, :logout
     get "/register", AuthController, :new
     post "/register", AuthController, :create
 
     get "/", PageController, :index
     get "/:slug", PageController, :show
+
+    scope "/" do
+      pipe_through(:ensure_auth)
+    end
   end
 
   # Other scopes may use custom stacks.

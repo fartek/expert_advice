@@ -33,6 +33,12 @@ config :expert_advice, ExpertAdviceStorage.Repo,
   port: System.get_env("POSTGRES_PORT"),
   pool_size: 10
 
+config :expert_advice, ExpertAdviceWeb.Auth.Guardian,
+  issuer: "expert_advice",
+  secret_key:
+    System.get_env("GUARDIAN_SECRET") ||
+      "2yWjRrvK4Emmw5KHkn1ZGkguzTj3f9shoix6OUuYSmDfhobZx9oq54Ktbtq1AX9z"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
