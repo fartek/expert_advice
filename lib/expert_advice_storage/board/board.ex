@@ -80,4 +80,19 @@ defmodule ExpertAdviceStorage.Board do
         ilike(sp.body, ^query_string)
     )
   end
+
+  @spec patch_post(Ecto.UUID.t(), map) :: {:ok, Post.t()} | {:error, term}
+  def patch_post(id, params) do
+    # Note: Optimally this would be done with locking the table or a transaction
+    case Repo.get(Post, id) do
+      nil -> {:error, :not_found}
+      post -> do_patch_post(post, params)
+    end
+  end
+
+  @spec do_patch_post(Post.t(), map) :: {:ok, Post.t()} | {:error, term}
+  defp do_patch_post(post, params) do
+    changeset = Post.patch_changeset(post, params)
+    Repo.update(changeset)
+  end
 end

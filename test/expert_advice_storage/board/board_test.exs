@@ -215,4 +215,45 @@ defmodule ExpertAdviceStorage.BoardTest do
       assert Board.get_post_with_subposts_by_slug("question-1") == post
     end
   end
+
+  describe "patch_post/2" do
+    test "update the post if found by id", context do
+      post =
+        Factory.insert!(:post,
+          title: "post",
+          slug: "post",
+          body: "body 1",
+          author_id: context.valid_params.author_id
+        )
+
+      assert {:ok, new_post} = Board.patch_post(post.id, %{body: "body 2"})
+      assert new_post.body == "body 2"
+    end
+
+    test "return an error tuple if not found" do
+      assert Board.patch_post(Ecto.UUID.generate(), %{body: "body 2"}) == {:error, :not_found}
+    end
+
+    test "return an error tuple if invalid changeset", context do
+      Factory.insert!(:post,
+        title: "taken",
+        slug: "taken",
+        body: "taken",
+        author_id: context.valid_params.author_id
+      )
+
+      post =
+        Factory.insert!(:post,
+          title: "post",
+          slug: "post",
+          body: "body 1",
+          author_id: context.valid_params.author_id
+        )
+
+      assert {:error, changeset} = Board.patch_post(post.id, %{title: "taken"})
+
+      assert %{title: [{"has already been taken", _}]} =
+               Ecto.Changeset.traverse_errors(changeset, & &1)
+    end
+  end
 end
