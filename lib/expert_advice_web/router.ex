@@ -39,6 +39,7 @@ defmodule ExpertAdviceWeb.Router do
       post "/ask", PageController, :create
       post "/:slug/answer", PageController, :answer
       get "/:slug/delete", PageController, :delete
+      get "/:slug/answer/:id/delete", PageController, :delete_answer
     end
 
     get "/:slug", PageController, :show

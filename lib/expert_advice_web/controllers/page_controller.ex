@@ -82,7 +82,7 @@ defmodule ExpertAdviceWeb.PageController do
 
   defp do_answer(%{valid?: true} = schema, conn, slug) do
     account = Guardian.Plug.current_resource(conn)
-    question = Board.show_details(slug)
+    question = Board.inspect_question_by_slug(slug)
 
     result =
       %{author: account.user, is_deleted?: false, question_id: question.id}
@@ -135,7 +135,7 @@ defmodule ExpertAdviceWeb.PageController do
   def delete(conn, params) do
     slug = params["slug"]
 
-    case Board.show_details(slug) do
+    case Board.inspect_question_by_slug(slug) do
       nil ->
         conn
         |> put_flash(:error, "Cannot delete a question that does not exist")
@@ -160,5 +160,36 @@ defmodule ExpertAdviceWeb.PageController do
     conn
     |> put_flash(:error, "You do not have the rights to delete this question")
     |> redirect(to: Routes.page_path(conn, :show, question.slug))
+  end
+
+  def delete_answer(conn, params) do
+    id = params["id"]
+    slug = params["slug"]
+
+    case Board.inspect_answer(id) do
+      nil ->
+        conn
+        |> put_flash(:error, "Cannot delete an answer that does not exist")
+        |> redirect(to: Routes.page_path(conn, :show, slug))
+
+      answer ->
+        author = Guardian.Plug.current_resource(conn).user
+        do_delete_answer(conn, answer, author, slug)
+    end
+  end
+
+  defp do_delete_answer(conn, %{author: %{id: id}, is_deleted?: false} = answer, %{id: id}, slug) do
+    case Board.delete_answer(answer) do
+      :ok ->
+        conn
+        |> put_flash(:info, "Answer deleted successfully!")
+        |> redirect(to: Routes.page_path(conn, :show, slug))
+    end
+  end
+
+  defp do_delete_answer(conn, _answer, _author, slug) do
+    conn
+    |> put_flash(:error, "You do not have the rights to delete this answer")
+    |> redirect(to: Routes.page_path(conn, :show, slug))
   end
 end
