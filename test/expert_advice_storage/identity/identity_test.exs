@@ -39,4 +39,17 @@ defmodule ExpertAdviceStorage.IdentityTest do
       assert "invalid_username" |> Identity.get_account_by_username() |> is_nil()
     end
   end
+
+  describe "create_account_and_user/1" do
+    test "returns error changeset if fails on inserting account" do
+      assert {:error, changeset} = Identity.create_account_and_user(%{})
+      assert changeset.valid? == false
+    end
+
+    test "returns error changeset if fails on inserting user" do
+      params = %{username: "unique_user", password: "correct_password"}
+      assert {:error, changeset} = Identity.create_account_and_user(params)
+      assert changeset.valid? == false
+    end
+  end
 end
