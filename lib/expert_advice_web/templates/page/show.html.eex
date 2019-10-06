@@ -1,0 +1,19 @@
+<h3>Question</h3>
+<article>
+  <h2><%= @details.title %></h2>
+  <div>
+  <%= @details.content %>
+  </div>
+</article>
+
+<h3>Answers</h3>
+<%= for answer <- @details.answers do %>
+<article>
+  <%= answer.content %>
+</article>
+<% end %>
+
+<h3>Post answer</h3>
+<form>
+  <input type="text" placeholder="Post your answer">
+</form>
