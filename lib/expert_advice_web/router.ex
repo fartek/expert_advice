@@ -31,11 +31,15 @@ defmodule ExpertAdviceWeb.Router do
     post "/register", AuthController, :create
 
     get "/", PageController, :index
-    get "/:slug", PageController, :show
 
     scope "/" do
       pipe_through(:ensure_auth)
+
+      get "/ask", PageController, :new
+      post "/ask", PageController, :create
     end
+
+    get "/:slug", PageController, :show
   end
 
   # Other scopes may use custom stacks.
