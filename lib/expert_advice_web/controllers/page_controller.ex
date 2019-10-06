@@ -87,7 +87,7 @@ defmodule ExpertAdviceWeb.PageController do
     result =
       %{author: account.user, is_deleted?: false, question_id: question.id}
       |> Map.merge(schema.changes)
-      |> Board.post_answer()
+      |> post_answer_if_question_exists(question)
 
     case result do
       {:ok, _} ->
@@ -98,7 +98,7 @@ defmodule ExpertAdviceWeb.PageController do
       {:error, _} ->
         conn
         |> put_flash(:error, "Error while posting answer!")
-        |> render("new.html", changeset: schema)
+        |> redirect(to: Routes.page_path(conn, :show, slug))
     end
   end
 
@@ -109,6 +109,12 @@ defmodule ExpertAdviceWeb.PageController do
     |> put_flash(:error, error_message)
     |> redirect(to: Routes.page_path(conn, :show, slug))
   end
+
+  defp post_answer_if_question_exists(changes, %{is_deleted?: false}) do
+    Board.post_answer(changes)
+  end
+
+  defp post_answer_if_question_exists(_, _), do: {:error, :question_is_deleted}
 
   defp parse_answer_error(%{content: [{message, error_params} | _]}) do
     validation = Keyword.fetch!(error_params, :validation)
@@ -125,4 +131,34 @@ defmodule ExpertAdviceWeb.PageController do
   end
 
   defp parse_answer_error(_), do: "Something went wrong!"
+
+  def delete(conn, params) do
+    slug = params["slug"]
+
+    case Board.show_details(slug) do
+      nil ->
+        conn
+        |> put_flash(:error, "Cannot delete a question that does not exist")
+        |> redirect(to: "/")
+
+      question ->
+        author = Guardian.Plug.current_resource(conn).user
+        do_delete(conn, question, author)
+    end
+  end
+
+  defp do_delete(conn, %{author: %{id: id}, is_deleted?: false} = question, %{id: id}) do
+    case Board.delete_question(question) do
+      {:ok, _} ->
+        conn
+        |> put_flash(:info, "Question deleted successfully!")
+        |> redirect(to: Routes.page_path(conn, :index))
+    end
+  end
+
+  defp do_delete(conn, question, _author) do
+    conn
+    |> put_flash(:error, "You do not have the rights to delete this question")
+    |> redirect(to: Routes.page_path(conn, :show, question.slug))
+  end
 end

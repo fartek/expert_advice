@@ -37,10 +37,11 @@ defmodule ExpertAdviceWeb.Router do
 
       get "/ask", PageController, :new
       post "/ask", PageController, :create
+      post "/:slug/answer", PageController, :answer
+      get "/:slug/delete", PageController, :delete
     end
 
     get "/:slug", PageController, :show
-    post "/:slug/answer", PageController, :answer
   end
 
   # Other scopes may use custom stacks.

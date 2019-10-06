@@ -1,19 +1,26 @@
 <h3>Question</h3>
 <article>
-  <h2><%= @details.title %></h2>
+  <h2><%= @details.title %>
+  <%= if not @details.is_deleted? and @details.author.id == @account.user.id do %>
+    <small> | <%= link("Delete", to: Routes.page_path(@conn, :delete, @details.slug), method: :delete) %> </small>
+  <% end %>
+  </h2>
+  <h4>Posted by: <%= @details.author.display_name %></h4>
   <div>
-  <%= @details.content %>
+    <%= if @details.is_deleted? do %>
+      [Question deleted]
+    <% else %>
+      <%= @details.content %>
+    <% end %>
   </div>
 </article>
 
 <h3>Answers</h3>
 <%= for answer <- @details.answers do %>
-<article>
-  <%= answer.content %>
-</article>
+<article><%= answer.content %></article>
 <% end %>
 
-<%= if @account do %>
+<%= if @account != nil and not @details.is_deleted? do %>
   <h3>Post answer</h3>
   <%= form_for @changeset, Routes.page_path(@conn, :answer, @details.slug), fn f -> %>
     <div>
