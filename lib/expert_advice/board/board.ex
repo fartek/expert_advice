@@ -36,8 +36,8 @@ defmodule ExpertAdvice.Board do
   end
 
   @spec post_answer(Answer.t()) :: {:ok, BoardStorage.Post.t()} | {:error, term}
-  def post_answer(question) do
-    question
+  def post_answer(answer) do
+    answer
     |> Answer.to_post_params()
     |> BoardStorage.create_post()
   end

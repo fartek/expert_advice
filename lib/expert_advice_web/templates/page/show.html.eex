@@ -13,7 +13,15 @@
 </article>
 <% end %>
 
-<h3>Post answer</h3>
-<form>
-  <input type="text" placeholder="Post your answer">
-</form>
+<%= if @account do %>
+  <h3>Post answer</h3>
+  <%= form_for @changeset, Routes.page_path(@conn, :answer, @details.slug), fn f -> %>
+    <div>
+      <%= label f, :content %>
+      <%= textarea f, :content %>
+      <%= error_tag f, :content %>
+    </div>
+
+    <%= submit "Post answer" %>
+  <% end %>
+<% end %>

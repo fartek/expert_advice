@@ -3,9 +3,11 @@ defmodule ExpertAdviceWeb.PageController do
 
   alias ExpertAdvice.Board
   alias ExpertAdviceWeb.Schemas.Board.PostQuestion, as: PostQuestionSchema
+  alias ExpertAdviceWeb.Schemas.Board.PostAnswer, as: PostAnswerSchema
 
   @question_post_success "Question posted successfully!"
   @question_post_fail "Could not post question. Check the fields and try again."
+  @answer_post_success "Answer posted successfully!"
 
   def index(conn, _params) do
     questions = Board.list_questions()
@@ -15,7 +17,7 @@ defmodule ExpertAdviceWeb.PageController do
 
   def show(conn, %{"slug" => slug}) do
     details = Board.show_details(slug)
-    changeset = ExpertAdviceStorage.Board.Post.changeset(%{})
+    changeset = PostAnswerSchema.changeset()
 
     params = %{details: details, changeset: changeset}
     render(conn, "show.html", params)
@@ -71,4 +73,56 @@ defmodule ExpertAdviceWeb.PageController do
     |> put_flash(:error, @question_post_fail)
     |> render("new.html", changeset: new_changeset)
   end
+
+  def answer(conn, params) do
+    params["post_answer"]
+    |> PostAnswerSchema.changeset()
+    |> do_answer(conn, params["slug"])
+  end
+
+  defp do_answer(%{valid?: true} = schema, conn, slug) do
+    account = Guardian.Plug.current_resource(conn)
+    question = Board.show_details(slug)
+
+    result =
+      %{author: account.user, is_deleted?: false, question_id: question.id}
+      |> Map.merge(schema.changes)
+      |> Board.post_answer()
+
+    case result do
+      {:ok, _} ->
+        conn
+        |> put_flash(:info, @answer_post_success)
+        |> redirect(to: Routes.page_path(conn, :show, slug))
+
+      {:error, _} ->
+        conn
+        |> put_flash(:error, "Error while posting answer!")
+        |> render("new.html", changeset: schema)
+    end
+  end
+
+  defp do_answer(changeset, conn, slug) do
+    error_message = changeset |> PostAnswerSchema.extract_errors() |> parse_answer_error()
+
+    conn
+    |> put_flash(:error, error_message)
+    |> redirect(to: Routes.page_path(conn, :show, slug))
+  end
+
+  defp parse_answer_error(%{content: [{message, error_params} | _]}) do
+    validation = Keyword.fetch!(error_params, :validation)
+
+    case validation do
+      :required ->
+        "Answer " <> message
+
+      :length ->
+        count = Keyword.fetch!(error_params, :count)
+        full_message = "Answer " <> message
+        String.replace(full_message, "%{count}", Integer.to_string(count))
+    end
+  end
+
+  defp parse_answer_error(_), do: "Something went wrong!"
 end

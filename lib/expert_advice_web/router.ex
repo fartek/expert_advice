@@ -40,6 +40,7 @@ defmodule ExpertAdviceWeb.Router do
     end
 
     get "/:slug", PageController, :show
+    post "/:slug/answer", PageController, :answer
   end
 
   # Other scopes may use custom stacks.
