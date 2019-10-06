@@ -256,4 +256,24 @@ defmodule ExpertAdviceStorage.BoardTest do
                Ecto.Changeset.traverse_errors(changeset, & &1)
     end
   end
+
+  describe "delete_post/1" do
+    test "delete the post if found by id", context do
+      post =
+        Factory.insert!(:post,
+          title: "post",
+          slug: "post",
+          body: "body 1",
+          author_id: context.valid_params.author_id,
+          is_deleted: false
+        )
+
+      assert {:ok, new_post} = Board.delete_post(post.id)
+      assert new_post.is_deleted == true
+    end
+
+    test "return an error tuple if not found" do
+      assert Board.delete_post(Ecto.UUID.generate()) == {:error, :not_found}
+    end
+  end
 end
