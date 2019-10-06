@@ -133,4 +133,30 @@ defmodule ExpertAdvice.BoardTest do
       assert updated_answer.is_deleted == true
     end
   end
+
+  describe "inspect_question_by_slug/1" do
+    test "returns Question if found", context do
+      post = Factory.insert!(:post, slug: "slug", author_id: context.user.id)
+      post = Repo.preload(post, :author)
+      question = Question.from_post(post)
+      assert Board.inspect_question_by_slug(question.slug) == question
+    end
+
+    test "returns nil if not found" do
+      assert Board.inspect_question_by_slug("none") == nil
+    end
+  end
+
+  describe "inspect_answer/1" do
+    test "returns Answer if found", context do
+      post = Factory.insert!(:post, author_id: context.user.id)
+      post = Repo.preload(post, :author)
+      answer = Answer.from_post(post)
+      assert Board.inspect_answer(answer.id) == answer
+    end
+
+    test "returns nil if not found" do
+      assert Board.inspect_answer(Ecto.UUID.generate()) == nil
+    end
+  end
 end

@@ -274,4 +274,44 @@ defmodule ExpertAdviceStorage.BoardTest do
       assert Board.delete_post(Ecto.UUID.generate()) == {:error, :not_found}
     end
   end
+
+  describe "get_post_by_slug/1" do
+    test "returns post if found by slug", context do
+      post =
+        Factory.insert!(:post,
+          title: "question 1",
+          slug: "question-1",
+          body: "body 1",
+          author_id: context.valid_params.author_id
+        )
+
+      post = Repo.preload(post, :author)
+
+      assert Board.get_post_by_slug("question-1") == post
+    end
+
+    test "returns nil if not found" do
+      assert Board.get_post_by_slug("slug") == nil
+    end
+  end
+
+  describe "get_post/1" do
+    test "returns post if found by id", context do
+      post =
+        Factory.insert!(:post,
+          title: "question 1",
+          slug: "question-1",
+          body: "body 1",
+          author_id: context.valid_params.author_id
+        )
+
+      post = Repo.preload(post, :author)
+
+      assert Board.get_post(post.id) == post
+    end
+
+    test "returns nil if not found" do
+      assert Board.get_post(Ecto.UUID.generate()) == nil
+    end
+  end
 end

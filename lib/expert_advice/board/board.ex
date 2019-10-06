@@ -71,4 +71,20 @@ defmodule ExpertAdvice.Board do
       :ok
     end
   end
+
+  @spec inspect_question_by_slug(binary) :: Question.t() | nil
+  def inspect_question_by_slug(slug) do
+    case BoardStorage.get_post_by_slug(slug) do
+      nil -> nil
+      post -> Question.from_post(post)
+    end
+  end
+
+  @spec inspect_answer(Ecto.UUID.t()) :: Answer.t() | nil
+  def inspect_answer(id) do
+    case BoardStorage.get_post(id) do
+      nil -> nil
+      post -> Answer.from_post(post)
+    end
+  end
 end
