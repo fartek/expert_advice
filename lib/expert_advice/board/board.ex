@@ -41,4 +41,34 @@ defmodule ExpertAdvice.Board do
     |> Answer.to_post_params()
     |> BoardStorage.create_post()
   end
+
+  @spec edit_question(Question.t(), map) :: {:ok, Question.t()} | {:error, term}
+  def edit_question(question, params) do
+    with {:ok, new_post} <- BoardStorage.patch_post(question.id, params) do
+      new_question = show_details(new_post.slug)
+      {:ok, new_question}
+    end
+  end
+
+  @spec delete_question(Question.t()) :: {:ok, Question.t()} | {:error, term}
+  def delete_question(question) do
+    with {:ok, new_post} <- BoardStorage.delete_post(question.id) do
+      new_question = show_details(new_post.slug)
+      {:ok, new_question}
+    end
+  end
+
+  @spec edit_answer(Answer.t(), map) :: :ok | {:error, term}
+  def edit_answer(answer, params) do
+    with {:ok, _} <- BoardStorage.patch_post(answer.id, params) do
+      :ok
+    end
+  end
+
+  @spec delete_answer(Answer.t()) :: :ok | {:error, term}
+  def delete_answer(answer) do
+    with {:ok, _} <- BoardStorage.delete_post(answer.id) do
+      :ok
+    end
+  end
 end
