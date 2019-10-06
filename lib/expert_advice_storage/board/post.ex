@@ -9,7 +9,7 @@ defmodule ExpertAdviceStorage.Board.Post do
   alias Ecto.Changeset
   alias ExpertAdviceStorage.Identity.User
 
-  @allowed_fields ~w(title body tags parent_id author_id number_of_views)a
+  @allowed_fields ~w(title body tags parent_id author_id number_of_views is_deleted)a
   @required_fields ~w(body tags author_id)a
 
   @type t :: %Post{
@@ -26,7 +26,8 @@ defmodule ExpertAdviceStorage.Board.Post do
     field(:slug, :string)
     field(:body, :string)
     field(:tags, {:array, :string})
-    field(:number_of_views, :integer)
+    field(:number_of_views, :integer, default: 0)
+    field(:is_deleted, :boolean, default: false)
 
     has_many(:subposts, Post, foreign_key: :parent_id)
     belongs_to(:post, Post, type: Ecto.UUID, foreign_key: :parent_id)

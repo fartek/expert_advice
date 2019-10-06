@@ -147,6 +147,27 @@ defmodule ExpertAdviceStorage.BoardTest do
 
       assert Board.list_root_posts(contains: "question 2", limit: 1) == [post_2]
     end
+
+    test "doesn't list deleted posts", context do
+      post =
+        Factory.insert!(:post,
+          title: "question 1",
+          slug: "question-1",
+          body: "body 1",
+          author_id: context.valid_params.author_id
+        )
+
+      Factory.insert!(:post,
+        title: "question 2",
+        slug: "question-2",
+        body: "body 2",
+        author_id: context.valid_params.author_id,
+        is_deleted: true
+      )
+
+      post = Repo.preload(post, :author)
+      assert Board.list_root_posts() == [post]
+    end
   end
 
   describe "get_post_with_subposts_by_slug/1" do
@@ -174,6 +195,18 @@ defmodule ExpertAdviceStorage.BoardTest do
     end
 
     test "returns nil if not found" do
+      assert Board.get_post_with_subposts_by_slug("question-1") == nil
+    end
+
+    test "returns nil if deleted", context do
+      Factory.insert!(:post,
+        title: "question 1",
+        slug: "question-1",
+        body: "body 1",
+        author_id: context.valid_params.author_id,
+        is_deleted: true
+      )
+
       assert Board.get_post_with_subposts_by_slug("question-1") == nil
     end
   end
