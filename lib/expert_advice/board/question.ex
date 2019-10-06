@@ -19,7 +19,8 @@ defmodule ExpertAdvice.Board.Question do
           tags: [binary],
           author: Author.t(),
           answers: :not_loaded | [Answer.t()],
-          number_of_views: pos_integer
+          number_of_views: pos_integer,
+          is_deleted?: boolean
         }
 
   defstruct id: nil,
@@ -29,7 +30,8 @@ defmodule ExpertAdvice.Board.Question do
             tags: [],
             author: nil,
             answers: :not_loaded,
-            number_of_views: 0
+            number_of_views: 0,
+            is_deleted?: false
 
   @impl true
   @spec from_post(BoardStorage.Post.t(), [PostConcern.from_post_opt()]) :: Question.t()
@@ -43,7 +45,8 @@ defmodule ExpertAdvice.Board.Question do
       content: post.body,
       tags: post.tags,
       author: Author.from_user(post.author),
-      number_of_views: post.number_of_views
+      number_of_views: post.number_of_views,
+      is_deleted?: post.is_deleted
     }
 
     if load_answers do
@@ -62,7 +65,8 @@ defmodule ExpertAdvice.Board.Question do
       tags: question.tags,
       parent_id: nil,
       author_id: question.author.id,
-      number_of_views: 0
+      number_of_views: 0,
+      is_deleted: question.is_deleted?
     }
   end
 end

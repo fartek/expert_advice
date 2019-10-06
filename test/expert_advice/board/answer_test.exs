@@ -7,13 +7,14 @@ defmodule ExpertAdvice.Board.AnswerTest do
   describe "from_post/1" do
     test "creates a Answer from a Post" do
       user = Factory.build(:user)
-      post = Factory.build(:post, author: user)
+      post = Factory.build(:post, author: user, is_deleted: true)
       answer = Answer.from_post(post)
 
       assert answer.content == post.body
       assert answer.author.display_name == post.author.display_name
       assert answer.question_id == post.parent_id
       assert answer.id == post.id
+      assert answer.is_deleted? == post.is_deleted
     end
   end
 end
