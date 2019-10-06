@@ -1,0 +1,11 @@
+<section>
+  <%= if @account do %>
+    <a href="<%= Routes.question_path(@conn, :new) %>">Ask a question</a>
+  <% end %>
+
+  <%= for question <- @questions do %>
+  <article class="article-listed">
+    <h3><a href="<%= Routes.question_path(@conn, :show, question.slug) %>"><%= question.title %></a></h3>
+  </article>
+  <% end %>
+</section>

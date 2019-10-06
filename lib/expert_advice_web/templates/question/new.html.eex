@@ -1,6 +1,6 @@
 <h2>Ask a question</h2>
 
-<%= form_for @changeset, Routes.page_path(@conn, :create), fn f -> %>
+<%= form_for @changeset, Routes.question_path(@conn, :create), fn f -> %>
   <div>
     <%= label f, :title %>
     <%= text_input f, :title %>

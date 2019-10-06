@@ -27,7 +27,7 @@ defmodule ExpertAdviceWeb.AuthController do
       :ok ->
         conn
         |> put_flash(:info, @registration_success)
-        |> redirect(to: Routes.page_path(conn, :index))
+        |> redirect(to: Routes.question_path(conn, :index))
 
       {:error, changeset} ->
         new_changeset = RegisterSchema.merge_with_changeset(schema, changeset)

@@ -30,23 +30,18 @@ defmodule ExpertAdviceWeb.Router do
     get "/register", AuthController, :new
     post "/register", AuthController, :create
 
-    get "/", PageController, :index
+    get "/", QuestionController, :index
 
     scope "/" do
       pipe_through(:ensure_auth)
 
-      get "/ask", PageController, :new
-      post "/ask", PageController, :create
-      post "/:slug/answer", PageController, :answer
-      get "/:slug/delete", PageController, :delete
-      get "/:slug/answer/:id/delete", PageController, :delete_answer
+      get "/ask", QuestionController, :new
+      post "/ask", QuestionController, :create
+      get "/:slug/delete", QuestionController, :delete
+      post "/:slug/answer", AnswerController, :create
+      get "/:slug/answer/:id/delete", AnswerController, :delete
     end
 
-    get "/:slug", PageController, :show
+    get "/:slug", QuestionController, :show
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", ExpertAdviceWeb do
-  #   pipe_through :api
-  # end
 end
