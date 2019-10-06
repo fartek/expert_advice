@@ -19,11 +19,11 @@ defmodule ExpertAdviceStorage.Board do
   def get_post_with_subposts_by_slug(slug) do
     Post
     |> where([p], p.slug == ^slug)
-    |> join(:left, [p], assoc(p, :subposts))
-    |> join(:inner, [p, _], assoc(p, :author))
-    |> join(:inner, [_, sp, _], assoc(sp, :author))
-    |> preload([_, sp, a, spa], author: a, subposts: {sp, author: spa})
-    |> order_by([_, sp], asc: sp.inserted_at)
+    |> join(:inner, [p], assoc(p, :author))
+    |> join(:left, [p, _], assoc(p, :subposts))
+    |> join(:left, [_, _, sp], assoc(sp, :author))
+    |> preload([_, a, sp, spa], author: a, subposts: {sp, author: spa})
+    |> order_by([_, _, sp], asc: sp.inserted_at)
     |> Repo.one()
   end
 
@@ -37,7 +37,7 @@ defmodule ExpertAdviceStorage.Board do
     Post
     |> where([p], is_nil(p.parent_id))
     |> join(:inner, [p], assoc(p, :author))
-    |> join(:left, [p, a], assoc(p, :subposts))
+    |> join(:left, [p, _], assoc(p, :subposts))
     |> apply_tags(tags)
     |> apply_contains(contains)
     |> apply_limit(limit)
