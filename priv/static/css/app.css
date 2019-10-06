@@ -1,0 +1,11 @@
+/* This file is for your main application css. */
+
+@import "./phoenix.css";
+
+.inline-block {
+  display: inline-block;
+}
+
+.main-title {
+  font-size: 2rem;
+}
