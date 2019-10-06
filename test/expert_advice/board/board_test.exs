@@ -102,4 +102,35 @@ defmodule ExpertAdvice.BoardTest do
       assert post.parent_id == question.id
     end
   end
+
+  describe "edit_question/2" do
+    test "returns an updated struct", context do
+      question = Factory.insert!(:post, author_id: context.user.id)
+      assert {:ok, %{title: "edit title"}} = Board.edit_question(question, %{title: "edit title"})
+    end
+  end
+
+  describe "delete_question/2" do
+    test "returns an updated struct", context do
+      question = Factory.insert!(:post, author_id: context.user.id, is_deleted: false)
+      assert {:ok, %{is_deleted?: true}} = Board.delete_question(question)
+    end
+  end
+
+  describe "edit_answer/2" do
+    test "returns :ok", context do
+      answer = Factory.insert!(:post, author_id: context.user.id)
+      assert Board.edit_answer(answer, %{body: "edit body"}) == :ok
+    end
+  end
+
+  describe "delete_answer/2" do
+    test "returns :ok", context do
+      answer = Factory.insert!(:post, author_id: context.user.id, is_deleted: false)
+      assert Board.delete_answer(answer) == :ok
+
+      updated_answer = Repo.get(ExpertAdviceStorage.Board.Post, answer.id)
+      assert updated_answer.is_deleted == true
+    end
+  end
 end
