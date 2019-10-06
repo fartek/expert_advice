@@ -95,4 +95,7 @@ defmodule ExpertAdviceStorage.Board do
     changeset = Post.patch_changeset(post, params)
     Repo.update(changeset)
   end
+
+  @spec delete_post(Ecto.UUID.t()) :: {:ok, Post.t()} | {:error, term}
+  def delete_post(id), do: patch_post(id, %{is_deleted: true})
 end
