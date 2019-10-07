@@ -2,10 +2,49 @@
 
 @import "./phoenix.css";
 
+/* global */
+a {
+  color: black;
+}
+
+/* question/index.html */
 .inline-block {
   display: inline-block;
 }
 
 .main-title {
   font-size: 2rem;
+}
+
+.toolbar {
+  margin-top: 4rem;
+  margin-bottom: 4rem;
+  text-align: right;
+}
+
+.article-listed > .question-title > a {
+  color: #3b73db;
+}
+
+/* question/show.html */
+.question-heading {
+  margin-bottom: 0.3rem;
+}
+
+.answers-title {
+  margin-top: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.answer-body {
+  border-bottom: 1px solid darkgrey;
+  margin-bottom: 2rem;
+}
+
+.no-answers {
+  color: #3b3b3b;
+}
+
+.question-body .posted-by {
+  text-align: right;
 }

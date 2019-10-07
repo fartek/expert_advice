@@ -1,14 +1,15 @@
 <section>
   <%= if @account do %>
-    <div>
-      <a href="<%= Routes.question_path(@conn, :new) %>">Ask a question</a>
+    <div class="toolbar">
+      <a href="<%= Routes.question_path(@conn, :new) %>" class="button">Ask a question</a>
     </div>
   <% end %>
 
 
+  <h3>Questions</h3>
   <%= for question <- @questions do %>
   <article class="article-listed">
-    <h3><a href="<%= Routes.question_path(@conn, :show, question.slug) %>"><%= question.title %></a></h3>
+    <h3 class="question-title"><a href="<%= Routes.question_path(@conn, :show, question.slug) %>"><%= question.title %></a></h3>
   </article>
   <% end %>
 </section>

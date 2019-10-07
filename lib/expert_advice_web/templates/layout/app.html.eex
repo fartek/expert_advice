@@ -13,7 +13,7 @@
         <nav role="navigation">
           <% account = Guardian.Plug.current_resource(@conn) %>
           <%= if account do %>
-            <span class="inline-block"><%= account.username %></span>
+            <span class="inline-block"><strong><%= account.username %></strong></span>
             <span class="inline-block">|</span>
             <a class="inline-block" href="<%= Routes.auth_path(@conn, :logout) %>">Logout</a>
           <% else %>
@@ -30,6 +30,7 @@
     <main role="main" class="container">
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+
       <% assigns_with_account = Map.put(assigns, :account, account) %>
       <%= render @view_module, @view_template, assigns_with_account %>
     </main>
