@@ -10,8 +10,7 @@ defmodule ExpertAdviceWeb.QuestionController do
 
   def index(conn, _params) do
     questions = Board.list_questions()
-    params = %{questions: questions}
-    render(conn, "index.html", params)
+    render(conn, "index.html", questions: questions)
   end
 
   def show(conn, %{"slug" => slug}) do
