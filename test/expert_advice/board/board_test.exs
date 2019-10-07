@@ -106,7 +106,10 @@ defmodule ExpertAdvice.BoardTest do
   describe "edit_question/2" do
     test "returns an updated struct", context do
       question = Factory.insert!(:post, author_id: context.user.id)
-      assert {:ok, %{title: "edit title"}} = Board.edit_question(question, %{title: "edit title"})
+      params = %{content: "edit body", title: "edit title", tags: []}
+
+      assert {:ok, %{content: "edit body", title: "edit title", tags: []}} =
+               Board.edit_question(question, params)
     end
   end
 
@@ -120,7 +123,7 @@ defmodule ExpertAdvice.BoardTest do
   describe "edit_answer/2" do
     test "returns :ok", context do
       answer = Factory.insert!(:post, author_id: context.user.id)
-      assert Board.edit_answer(answer, %{body: "edit body"}) == :ok
+      assert Board.edit_answer(answer, %{content: "edit body"}) == :ok
     end
   end
 

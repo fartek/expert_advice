@@ -111,43 +111,6 @@ defmodule ExpertAdviceStorage.BoardTest do
       assert Board.list_root_posts(contains: "question 2") == [post_2, post_1]
     end
 
-    test "limit the number of posts after applying search filters", context do
-      post_1 =
-        Factory.insert!(:post,
-          title: "question 1",
-          slug: "question-1",
-          body: "body 1",
-          author_id: context.valid_params.author_id
-        )
-
-      post_2 =
-        Factory.insert!(:post,
-          title: "question 2",
-          slug: "question-2",
-          body: "body 2",
-          author_id: context.valid_params.author_id
-        )
-
-      Factory.insert!(:post,
-        title: nil,
-        slug: nil,
-        body: "answering with question 2!",
-        parent_id: post_1.id,
-        author_id: context.valid_params.author_id
-      )
-
-      Factory.insert!(:post,
-        title: "question 3",
-        slug: "question-3",
-        body: "body 3",
-        author_id: context.valid_params.author_id
-      )
-
-      post_2 = Repo.preload(post_2, :author)
-
-      assert Board.list_root_posts(contains: "question 2", limit: 1) == [post_2]
-    end
-
     test "list only not deleted posts", context do
       post =
         Factory.insert!(:post,
