@@ -130,7 +130,7 @@ defmodule ExpertAdviceWeb.AnswerController do
   defp do_edit(_answer, conn, _author, slug) do
     conn
     |> put_flash(:error, "You do not have the rights to edit this answer!")
-    |> redirect(to: Routes.answer_path(conn, :show, slug))
+    |> redirect(to: Routes.question_path(conn, :show, slug))
   end
 
   def update(conn, params) do
@@ -152,9 +152,6 @@ defmodule ExpertAdviceWeb.AnswerController do
         |> redirect(Routes.question_path(conn, :index))
 
       %{author: %{id: author_id}} = answer when author_id == user_id ->
-        IO.inspect(answer, label: "ANS")
-        IO.inspect(schema.changes, label: "CHG")
-
         case Board.edit_answer(answer, schema.changes) do
           :ok ->
             conn
@@ -162,11 +159,9 @@ defmodule ExpertAdviceWeb.AnswerController do
             |> redirect(to: Routes.question_path(conn, :show, slug))
 
           {:error, changeset} ->
-            new_changeset = PostAnswerSchema.merge_with_changeset(schema, changeset)
-
             conn
             |> put_flash(:error, @answer_edit_fail)
-            |> render("edit.html", changeset: new_changeset, slug: slug)
+            |> render("edit.html", changeset: changeset, slug: slug)
         end
     end
   end
