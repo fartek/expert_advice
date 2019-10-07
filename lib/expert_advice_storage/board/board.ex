@@ -27,12 +27,11 @@ defmodule ExpertAdviceStorage.Board do
     |> Repo.one()
   end
 
-  @type criterion :: {:tags, [binary]} | {:contains, binary} | {:limit, pos_integer}
+  @type criterion :: {:tags, [binary]} | {:contains, binary}
   @spec list_root_posts([criterion]) :: [Post.t()]
   def list_root_posts(criteria \\ []) do
     tags = criteria[:tags]
     contains = criteria[:contains]
-    limit = criteria[:limit]
 
     Post
     |> where([p], is_nil(p.parent_id) and not p.is_deleted)
@@ -40,15 +39,10 @@ defmodule ExpertAdviceStorage.Board do
     |> join(:left, [p, _], assoc(p, :subposts))
     |> apply_tags(tags)
     |> apply_contains(contains)
-    |> apply_limit(limit)
-    |> preload([p, a], author: a)
     |> order_by([p], desc: p.inserted_at)
+    |> preload([p, a], author: a)
     |> Repo.all()
   end
-
-  @spec apply_limit(Ecto.Query.t(), nil | pos_integer) :: Ecto.Query.t()
-  defp apply_limit(query, nil), do: query
-  defp apply_limit(query, limit), do: limit(query, ^limit)
 
   @spec apply_tags(Ecto.Query.t(), nil | [binary]) :: Ecto.Query.t()
   defp apply_tags(query, nil), do: query
