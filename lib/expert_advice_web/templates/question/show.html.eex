@@ -2,7 +2,12 @@
 <article>
   <h2><%= @details.title %>
   <%= if not @details.is_deleted? and @account != nil and @details.author.id == @account.user.id do %>
-    <small> | <%= link("Delete", to: Routes.question_path(@conn, :delete, @details.slug), method: :delete) %> </small>
+    <small>
+      | <%= link("Edit", to: Routes.question_path(@conn, :edit, @details.slug)) %>
+    </small>
+    <small>
+      | <%= link("Delete", to: Routes.question_path(@conn, :delete, @details.slug), method: :delete) %>
+    </small>
   <% end %>
   </h2>
   <h4>Posted by: <%= @details.author.display_name %></h4>
@@ -26,7 +31,14 @@
   <div>
     Posted by: <%= answer.author.display_name %>
     <%= if not answer.is_deleted? and @account != nil and answer.author.id == @account.user.id do %>
-      <a href="<%= Routes.answer_path(@conn, :delete, @details.slug, answer.id) %>"> Delete</a>
+    <small>
+      | 
+      <a href="<%= Routes.answer_path(@conn, :edit, @details.slug, answer.id) %>">Edit</a>
+    </small>
+    <small>
+      | 
+      <a href="<%= Routes.answer_path(@conn, :delete, @details.slug, answer.id) %>">Delete</a>
+    </small>
     <% end %>
   </div>
 </article>

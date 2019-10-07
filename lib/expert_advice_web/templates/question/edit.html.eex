@@ -1,0 +1,21 @@
+<h2>Edit a question</h2>
+
+<%= form_for @changeset, Routes.question_path(@conn, :update, @slug), fn f -> %>
+  <div>
+    <%= label f, :title %>
+    <%= text_input f, :title %>
+    <%= error_tag f, :title %>
+  </div>
+  <div>
+    <%= label f, :content %>
+    <%= textarea f, :content %>
+    <%= error_tag f, :content %>
+  </div>
+  <div>
+    <%= label f, :tags %>
+    <%= text_input f, :tags %>
+    <%= error_tag f, :tags %>
+  </div>
+
+  <%= submit "Submit" %>
+<% end %>

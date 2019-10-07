@@ -38,8 +38,13 @@ defmodule ExpertAdviceWeb.Router do
       get "/ask", QuestionController, :new
       post "/ask", QuestionController, :create
       get "/:slug/delete", QuestionController, :delete
+      get "/:slug/edit", QuestionController, :edit
+      post "/:slug", QuestionController, :update
+
       post "/:slug/answer", AnswerController, :create
       get "/:slug/answer/:id/delete", AnswerController, :delete
+      get "/:slug/answer/:id/edit", AnswerController, :edit
+      post "/:slug/answer/:id", AnswerController, :update
     end
 
     get "/:slug", QuestionController, :show
