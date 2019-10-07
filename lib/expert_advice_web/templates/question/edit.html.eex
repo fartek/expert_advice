@@ -17,5 +17,5 @@
     <%= error_tag f, :tags %>
   </div>
 
-  <%= submit "Submit" %>
+  <%= submit "Edit question" %>
 <% end %>
