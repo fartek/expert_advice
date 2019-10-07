@@ -44,7 +44,13 @@ defmodule ExpertAdvice.Board do
 
   @spec edit_question(Question.t(), map) :: {:ok, Question.t()} | {:error, term}
   def edit_question(question, params) do
-    with {:ok, new_post} <- BoardStorage.patch_post(question.id, params) do
+    post_params = %{
+      title: params.title,
+      body: params.content,
+      tags: params.tags
+    }
+
+    with {:ok, new_post} <- BoardStorage.patch_post(question.id, post_params) do
       new_question = show_details(new_post.slug)
       {:ok, new_question}
     end
@@ -60,7 +66,9 @@ defmodule ExpertAdvice.Board do
 
   @spec edit_answer(Answer.t(), map) :: :ok | {:error, term}
   def edit_answer(answer, params) do
-    with {:ok, _} <- BoardStorage.patch_post(answer.id, params) do
+    post_params = %{body: params.content}
+
+    with {:ok, _} <- BoardStorage.patch_post(answer.id, post_params) do
       :ok
     end
   end
