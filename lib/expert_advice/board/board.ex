@@ -14,7 +14,7 @@ defmodule ExpertAdvice.Board do
     |> PostParser.parse_from_posts(Question)
   end
 
-  @spec show_details(binary) :: Question.t()
+  @spec show_details(binary) :: Question.t() | nil
   def show_details(slug) do
     slug
     |> BoardStorage.get_post_with_subposts_by_slug()
