@@ -8,6 +8,9 @@ defmodule ExpertAdviceWeb.QuestionController do
   @question_post_success "Question posted successfully!"
   @question_post_fail "Could not post question. Check the fields and try again."
 
+  @question_edit_success "Question edited successfully!"
+  @question_edit_fail "Could not edit question. Check the fields and try again."
+
   def index(conn, _params) do
     questions = Board.list_questions()
     render(conn, "index.html", questions: questions)
@@ -106,5 +109,82 @@ defmodule ExpertAdviceWeb.QuestionController do
     conn
     |> put_flash(:error, "You do not have the rights to delete this question")
     |> redirect(to: Routes.question_path(conn, :show, question.slug))
+  end
+
+  def edit(conn, params) do
+    slug = params["slug"]
+    user = Guardian.Plug.current_resource(conn).user
+
+    case Board.inspect_question_by_slug(slug) do
+      nil ->
+        conn
+        |> put_flash(:error, "Cannot edit question that does not exist")
+        |> redirect(to: Routes.question_path(conn, :index))
+
+      question ->
+        do_edit(question, conn, user)
+    end
+  end
+
+  defp do_edit(%{author: %{id: id}} = question, conn, %{id: id}) do
+    changeset =
+      question
+      |> Map.from_struct()
+      |> Map.put(:tags, Enum.join(question.tags, ", "))
+      |> PostQuestionSchema.changeset()
+      |> PostQuestionSchema.with_tag_list_to_string()
+
+    render(conn, "edit.html", changeset: changeset, slug: question.slug)
+  end
+
+  defp do_edit(question, conn, _author) do
+    conn
+    |> put_flash(:error, "You do not have the rights to edit this question!")
+    |> redirect(to: Routes.question_path(conn, :show, question.slug))
+  end
+
+  def update(conn, params) do
+    slug = params["slug"]
+
+    params["post_question"]
+    |> PostQuestionSchema.changeset()
+    |> do_update(conn, slug)
+  end
+
+  defp do_update(%{valid?: true} = schema, conn, slug) do
+    user_id = Guardian.Plug.current_resource(conn).user.id
+
+    case Board.inspect_question_by_slug(slug) do
+      nil ->
+        conn
+        |> put_flash(:error, "Cannot update question which does not exist.")
+        |> redirect(Routes.question_path(conn, :index))
+
+      %{author: %{id: author_id}} = question when author_id == user_id ->
+        case Board.edit_question(question, schema.changes) do
+          {:ok, new_question} ->
+            conn
+            |> put_flash(:info, @question_edit_success)
+            |> redirect(to: Routes.question_path(conn, :show, new_question.slug))
+
+          {:error, changeset} ->
+            new_changeset = PostQuestionSchema.merge_with_changeset(schema, changeset)
+
+            conn
+            |> put_flash(:error, @question_edit_fail)
+            |> render("edit.html", changeset: new_changeset, slug: question.slug)
+        end
+    end
+  end
+
+  defp do_update(changeset, conn, slug) do
+    new_changeset =
+      changeset
+      |> PostQuestionSchema.with_tag_list_to_string()
+      |> Map.put(:action, :insert)
+
+    conn
+    |> put_flash(:error, @question_edit_fail)
+    |> render("edit.html", changeset: new_changeset, slug: slug)
   end
 end
